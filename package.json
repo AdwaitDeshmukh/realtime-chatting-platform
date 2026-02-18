@@ -1,0 +1,22 @@
+{
+  "name": "chatting_app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "node backend/src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdwaitDeshmukh/realtime-chatting-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdwaitDeshmukh/realtime-chatting-platform/issues"
+  },
+  "homepage": "https://github.com/AdwaitDeshmukh/realtime-chatting-platform#readme",
+  "description": ""
+}
