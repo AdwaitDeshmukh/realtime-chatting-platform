@@ -3,10 +3,12 @@ import dotenv from 'dotenv';
 import authRoute from './routes/auth.route.js'; 
 import messageRoute from './routes/messages.route.js';
 import path from 'path';
+import { connectDB } from './lib/db.js';
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+app.use(express.json());
 const _dirname=path.resolve();
 
 app.use(express.json());
@@ -26,4 +28,5 @@ if (process.env.NODE_ENV === "production" || true) {
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    connectDB();
 });
