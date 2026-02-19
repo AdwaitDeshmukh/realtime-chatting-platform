@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../lib/utils.js";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { ENV } from "../lib/env.js";
 
 export const signup=async(req,res)=>{
  const {fullName,email,password}=req.body;
@@ -22,16 +24,26 @@ if(user){
 const salt=await bcrypt.genSalt(10);
 const hashedPassword=await bcrypt.hash(password,salt);
 const newUser=new User({fullName,email,password:hashedPassword});
-if(newUser){
-generateToken(newUser._id,res);
-await newUser.save();
-return res.status(201).json({
-_id:newUser._id,
-fullName:newUser.fullName,
-email:newUser.email,
-profilePic:newUser.profilePic,
-})
-   
+if (newUser) {
+    generateToken(newUser._id, res);
+    const savedUser = await newUser.save();
+
+    // 1. Trigger the email FIRST (or at least before the return)
+    try {
+        // Use a fallback URL if ENV.CLIENT_URL isn't set yet
+        const clientURL = ENV.CLIENT_URL || "http://localhost:5173";
+        await sendWelcomeEmail(savedUser.email, savedUser.fullName, clientURL);
+    } catch (error) {
+        console.log("Email Error in Controller:", error);
+    }
+
+    // 2. FINALLY send the response to Postman
+    return res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilePic: newUser.profilePic,
+    });
 }
 else{
     return res.status(400).json({message:"Something went wrong"})
