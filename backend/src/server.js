@@ -5,6 +5,9 @@ import messageRoute from './routes/messages.route.js';
 import path from 'path';
 import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
+import cokieparser from 'cookie-parser';
+
+
 dotenv.config();
 
 const app = express();
@@ -13,7 +16,7 @@ app.use(express.json());
 const _dirname=path.resolve();
 
 app.use(express.json());
-
+app.use(cokieparser());
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 
