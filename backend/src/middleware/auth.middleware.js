@@ -12,14 +12,15 @@ export const protectRouter=async(req,res,next)=>{
     if(!decoded){
         return res.status(401).json({message:"Unauthorized"});
     }
-    const user=await User.findById(decoded.id);
+    const user = await User.findById(decoded.userId || decoded.id).select("-password");
     if(!user){
         return res.status(401).json({message:"Unauthorized"});
     }
     req.user=user;
     next();
     }
-    catch(error){
-    console.log(error);
-    } 
+    catch (error) {
+    console.log("Error in protectRoute middleware:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+}
 }
