@@ -6,9 +6,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        border: "border 4s linear infinite",
+      },
+      keyframes: {
+        border: {
+          to: { "--border-angle": "360deg" },
+        },
+      },
+    },
   },
   plugins: [
-    require('daisyui'),
+    import('daisyui'), // ← use import() since you're using ES modules
   ],
 }

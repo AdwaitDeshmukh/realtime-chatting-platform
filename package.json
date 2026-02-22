@@ -18,5 +18,8 @@
     "url": "https://github.com/AdwaitDeshmukh/realtime-chatting-platform/issues"
   },
   "homepage": "https://github.com/AdwaitDeshmukh/realtime-chatting-platform#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6"
+  }
 }

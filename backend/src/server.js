@@ -6,13 +6,14 @@ import path from 'path';
 import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
 import cokieparser from 'cookie-parser';
-
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const port = ENV.PORT || 5000;
 app.use(express.json());
+app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 const _dirname=path.resolve();
 
 app.use(express.json());
