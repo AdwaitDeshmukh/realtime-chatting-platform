@@ -5,10 +5,13 @@ import ChatPage from './pages/ChatPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
 import { useAuthStore } from './store/useAuthStore.js';
+import { Navigate } from 'react-router';
 function App() {
   const {authUser,isLoggedin,login}=useAuthStore();
   console.log(authUser);
   console.log(isLoggedin);
+
+
   return (
     
     <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p-4 overflow-hidden">
@@ -18,9 +21,9 @@ function App() {
 
       <button onClick={login} className='z-10'>login</button>
     <Routes>
-      <Route path="/" element={<ChatPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/" element={authUser ? <ChatPage />:<Navigate to={"/login"}/>} />
+      <Route path="/login" element={!authUser ? <LoginPage />:<Navigate to={"/"}/>} />
+      <Route path="/signup" element={!authUser ? <SignUpPage />:<Navigate to={"/"}/>} />
     </Routes>
     </div>
   )
