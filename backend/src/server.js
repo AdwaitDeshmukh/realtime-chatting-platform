@@ -1,37 +1,35 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import path from 'path';
 import authRoute from './routes/auth.route.js'; 
 import messageRoute from './routes/messages.route.js';
-import path from 'path';
 import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
-import cokieparser from 'cookie-parser';
-import cors from 'cors';
+import { app, server } from './lib/socket.js';
 
 dotenv.config();
 
-const app = express();
 const port = ENV.PORT || 5000;
-app.use(express.json());
-app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
-const _dirname=path.resolve();
 
-app.use(express.json());
-app.use(cokieparser());
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(cookieParser());
+
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 
-if (ENV.NODE_ENV === "production" || true) { 
-    // This points to E:\chatting_app\frontend\dist
+if (ENV.NODE_ENV === "production") {
+    const _dirname = path.resolve();
     app.use(express.static(path.join(_dirname, "frontend", "dist")));
-
-    // This ensures any page refresh or direct URL access returns the React app
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
     });
 }
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+server.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
     connectDB();
 });

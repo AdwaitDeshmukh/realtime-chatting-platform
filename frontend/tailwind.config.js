@@ -18,6 +18,6 @@ export default {
     },
   },
   plugins: [
-    import('daisyui'), // ← use import() since you're using ES modules
+    daisyui,
   ],
 }

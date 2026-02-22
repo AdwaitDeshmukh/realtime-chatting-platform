@@ -6,7 +6,7 @@ import { protectRouter } from '../middleware/auth.middleware.js';
 import arcjet from '@arcjet/node';
 import { arcjetProtection } from '../middleware/arcjet.middleware.js';
 
-router.use(arcjetProtection);
+//router.use(arcjetProtection);
 
 
 router.post("/signup", signup);
