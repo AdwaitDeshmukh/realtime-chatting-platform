@@ -21,6 +21,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 
+console.log("CLIENT_URL:", ENV.CLIENT_URL);
+console.log("CLIENT_URL length:", ENV.CLIENT_URL?.length);
+
 if (ENV.NODE_ENV === "production") {
     const _dirname = path.resolve();
     app.use(express.static(path.join(_dirname, "frontend", "dist")));
