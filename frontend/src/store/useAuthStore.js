@@ -31,8 +31,8 @@ export const useAuthStore = create((set,get) => ({
      checkAuth: async () => {
     try {
         const res = await axiosInstance.get("/auth/check");
-        set({ authUser: res.data });
-        get().connectSocket(); // ← add this
+        set({ authUser: res.data.user }); // ✅ FIXED: was res.data, now res.data.user
+        get().connectSocket();
     } catch (error) {
         console.log("error in authcheck", error);
     } finally {
@@ -46,7 +46,7 @@ login: async (data) => {
         const res = await axiosInstance.post("/auth/login", data);
         set({ authUser: res.data });
         toast.success("Logged in successfully");
-        get().connectSocket(); // ← add this
+        get().connectSocket();
     } catch (error) {
         toast.error(error.response?.data?.message || "Login failed");
     } finally {
@@ -59,7 +59,7 @@ logout: async () => {
         await axiosInstance.post("/auth/logout");
         toast.success("Logged out successfully");
         set({ authUser: null });
-        get().disconnectSocket(); // ← add this too
+        get().disconnectSocket();
     } catch (error) {
         toast.error(error.response?.data?.message || "Logout failed");
     }
@@ -80,20 +80,18 @@ logout: async () => {
     }
 },
 
-connectSocket: () => {
+  connectSocket: () => {
     const { authUser } = get();
     console.log("connectSocket called for:", authUser?.fullName);
     if (!authUser || get().socket?.connected) return;
 
     const socket = io(BASE_URL, {
-      withCredentials: true, // this ensures cookies are sent with the connection
+      withCredentials: true,
     });
 
     socket.connect();
-
     set({ socket });
 
-    // listen for online users event
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
